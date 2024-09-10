@@ -1,0 +1,53 @@
+<template>
+    <lightning-card title="Account Manager"  icon-name="action:new_account">
+<!-- <template lwc:if={isTrue}>
+            <p>This is a test1</p>
+        </template>
+        <template lwc:elseif={isFalse}>
+            <p>This is a test2</p>
+        </template>
+       <template lwc:else>
+            <p>This is a test3</p>
+        </template>-->
+       
+        <div class="slds-text-align_left">
+            <lightning-button variant="success" label="Create an Account" 
+            title="Create an Account" onclick={handleToggle} 
+            class="slds-m-left_x-small"
+            ></lightning-button>
+        </div>
+
+        <template lwc:if={showForm}>
+        <div class="slds-p-around_medium">
+            <lightning-input type="text" name="Name" value={newAccount.Name} label="Enter Name" onchange={handleInputs} required
+            placeholder="Enter Full Name"></lightning-input>
+            <lightning-input name="Phone" value={newAccount.Phone} label="Enter Phone" onchange={handleInputs} required></lightning-input>
+            <lightning-combobox
+            name="Type"
+            label="Type"
+            value={newAccount.Type}
+            placeholder="Select Type"
+            options={typeOptions}
+            onchange={handleInputs} ></lightning-combobox>
+
+            <lightning-combobox
+            name="Industry"
+            label="Industry"
+            value={newAccount.Industry}
+            placeholder="Select Industry"
+            options={industryOptions}
+            onchange={handleInputs} ></lightning-combobox>
+
+        </div>
+
+        <div class="slds-text-align_right">
+            <lightning-button variant="success" label="Save An Account" 
+            title="Successful action" onclick={handleClick} 
+            class="slds-m-left_x-small"
+            ></lightning-button>
+        </div>
+
+    </template>
+
+    </lightning-card>
+</template>

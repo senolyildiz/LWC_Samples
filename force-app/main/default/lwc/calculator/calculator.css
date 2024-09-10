@@ -1,0 +1,7 @@
+.custom-button {
+    width: 100px; /* Butonların sabit genişliği */
+    text-align: center; /* Buton metninin ortalanması */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

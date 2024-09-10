@@ -1,0 +1,42 @@
+<template>
+     
+    <lightning-card title="Calculator"  icon-name="utility:add_below">
+        merhaba
+        <!-- Bu bir input alanı için yorumdur -->
+        <div class="slds-p-around_medium">
+        <lightning-input type="number" label="Enter first number" onchange={handleFirstNumber} 
+        placeholder="Number"></lightning-input>
+        <lightning-input type="number" label="Enter second number" onblur={handleSecondNumber} required></lightning-input>
+        </div>
+        <div class="slds-m-around_medium">
+            <button class="slds-button_stretch slds-size_1-of-5 slds-p-vertical_x-small" style="margin-right: 10px;" onclick={handleAdditionClick} >Add</button>
+            <button class="slds-button_stretch slds-size_1-of-5 slds-p-vertical_x-small" style="margin-right: 10px;"  onclick={handleSubstractionClick}>Subtract</button>
+            <button class="slds-button_stretch slds-size_1-of-5 slds-p-vertical_x-small" style="margin-right: 10px;"  onclick={handleMultipliyingClick} >Multiply</button>
+            <button class="slds-button_stretch slds-size_1-of-5 slds-p-vertical_x-small" style="margin-right: 10px;"  onclick={handleDivisionClick} >Divide</button>
+        </div>
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col">
+                <lightning-button class="custom-button" variant="brand" label="Add" stretch="true"
+                title="Primary action" onclick={handleClick} icon-name="action:add_relationship" icon-position="right"></lightning-button>
+            </div>
+            <div class="slds-col">
+                <lightning-button class="custom-button" variant="brand" label="Substract" 
+                title="Primary action" onclick={handleClick} icon-name="utility:minimize_window" icon-position="right"></lightning-button>
+            </div>
+            <div class="slds-col">
+                <lightning-button class="custom-button" variant="brand" label="Multiply" 
+                title="Primary action" onclick={handleClick} icon-name="action:add_relationship" icon-position="right"></lightning-button>
+            </div>
+            <div class="slds-col">
+                <lightning-button class="custom-button" variant="brand" label="Divide" 
+                title="Primary action" onclick={handleClick} icon-name="action:add_relationship" icon-position="right"></lightning-button>
+            </div>
+        </div>
+        <div class="slds-p-around_medium">
+            <p><b>Result:</b>{result}</p>
+
+        </div>
+
+    </lightning-card>
+   
+</template>
