@@ -1,5 +1,6 @@
 <template>
    
+<<<<<<< HEAD
     
 
     <lightning-card title="Account Manager"  icon-name="action:new_account">
@@ -12,12 +13,16 @@
         </div>
 
         
+=======
+    <lightning-card title="Account Manager"  icon-name="action:new_account">
+>>>>>>> 90fdf5a63b28d880ef7308b9fd19ab467eba10ba
         <lightning-record-form
             object-api-name="Account"
             columns="3"
             fields={fields}
             onsuccess={handleSuccess}
             record-id={recordId}
+<<<<<<< HEAD
             mode="view"
            >
         </lightning-record-form>
@@ -42,5 +47,10 @@
    
   
 
+=======
+            mode="readonly"
+           >
+        </lightning-record-form>
+>>>>>>> 90fdf5a63b28d880ef7308b9fd19ab467eba10ba
 </lightning-card>
 </template>
