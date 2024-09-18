@@ -1,8 +1,7 @@
-import { LightningElement, api, track} from 'lwc';
+import { LightningElement } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-export default class LDSRecordForm extends LightningElement {
-    fields = ['Name', 'Phone', 'Industry', 'Type'];
-    @api recordId;
+export default class CreateContact extends LightningElement {
+
     showForm= false;
 
     handleSuccess(event){
@@ -15,13 +14,16 @@ export default class LDSRecordForm extends LightningElement {
         
         const evt = new ShowToastEvent({
             title: "Woov",
-            message: "An account was successfully created",
+            message: "A Contact was successfully created",
             variant: "success"
         });
         
         this.dispatchEvent(evt);
     }
 
+    handleToggle (){
+        this.showForm = !this.showForm;
+    }
     handleToggle (){
         this.showForm = !this.showForm;
     }

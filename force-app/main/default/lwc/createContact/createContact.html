@@ -1,0 +1,33 @@
+<template>
+    <lightning-card title="Contact Manager"  icon-name="action:new_contact">
+
+        <div class="slds-text-align_left">
+            <lightning-button variant="success" label="Create a Contact" 
+            title="Create a Contact" onclick={handleToggle} 
+            class="slds-m-left_x-small"
+            ></lightning-button>
+        </div>
+        
+
+        <template lwc:if={showForm}>
+        <lightning-record-form
+            object-api-name="Contact"
+            columns="2"
+            layout-type="Full"
+            onsuccess={handleSuccess}
+            record-id={recordId}
+            mode="view"
+           >
+        </lightning-record-form>
+    </template>
+    
+
+   
+        
+   
+   
+  
+
+</lightning-card>
+</template>
+    
