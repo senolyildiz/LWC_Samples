@@ -1,7 +1,14 @@
 <template>
-    <lightning-record-form
-    object-api-name="Account"
-    
->
-</lightning-record-form>
+   
+    <lightning-card title="Account Manager"  icon-name="action:new_account">
+        <lightning-record-form
+            object-api-name="Account"
+            columns="3"
+            fields={fields}
+            onsuccess={handleSuccess}
+            record-id={recordId}
+            mode="readonly"
+           >
+        </lightning-record-form>
+</lightning-card>
 </template>
