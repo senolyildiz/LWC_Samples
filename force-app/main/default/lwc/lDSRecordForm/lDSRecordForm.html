@@ -11,7 +11,7 @@
             ></lightning-button>
         </div>
 
-        
+        <template lwc:if={showForm}>
         <lightning-record-form
             object-api-name="Account"
             columns="3"
@@ -22,7 +22,7 @@
            >
         </lightning-record-form>
     
-
+        </template>
    
         <lightning-record-edit-form object-api-name="Account" onsuccess={handleSuccess} record-id={recordId}>
             <lightning-messages> </lightning-messages>
