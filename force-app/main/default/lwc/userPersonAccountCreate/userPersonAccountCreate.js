@@ -1,9 +1,10 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class UserPersonAccountCreate extends LightningElement {
 
-   
-
+    fields = [];
+    @api recordId;
+    showForm= false;
     handleSuccess(event){
         
         const inputFields = this.template.querySelectorAll('lightning-input-field');
@@ -28,4 +29,4 @@ export default class UserPersonAccountCreate extends LightningElement {
 
 
 
-}
+}}

@@ -8,19 +8,18 @@
             ></lightning-button>
         </div>
 
-        
+        <template lwc:if={showForm}>
         <lightning-record-form
             object-api-name="Account"
             record-type-id="012WU0000022eEjYAI"
             columns="2"
             layout-type="Full"
             onsuccess={handleSuccess}
-          
             mode="view"
            >
         </lightning-record-form>
     
-   
+    </template> 
    
         
    
