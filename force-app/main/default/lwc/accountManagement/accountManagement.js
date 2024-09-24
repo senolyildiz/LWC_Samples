@@ -4,10 +4,17 @@ import { getPicklistValuesByRecordType } from "lightning/uiObjectInfoApi";
 import ACCOUNT_OBJECT from "@salesforce/schema/Account";
 import createAccount from '@salesforce/apex/AccountManagementController.createAccount';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import getAccounts from '@salesforce/apex/AccountManagementController.getAccounts';
 export default class AccountManagement extends LightningElement {
     typeOptions = [];
     industryOptions = [];
-    showForm= false;
+    showCreateForm= false;
+    showUpdateForm= false;
+    accountsResult=[];
+    accounts=[];
+    selectedAccounts=[];
+
+
 
     newAccount = {
         Name: '',
@@ -29,6 +36,15 @@ export default class AccountManagement extends LightningElement {
          }
      }*/
 
+         @wire(getAccounts)
+         wiredAccounts(result) {
+            this.accountsResult=result;
+             if (result.data) {
+                 this.accounts=result.data;
+            } else if (result.error) {
+                  this.showToast('Error', error.body.message, 'error');
+              }}
+
        @wire(getPicklistValuesByRecordType, {
         objectApiName: ACCOUNT_OBJECT,
         recordTypeId: "012000000000000AAA" // Yerine uygun Record Type Id'sini koyun
@@ -49,7 +65,7 @@ export default class AccountManagement extends LightningElement {
         console.log('New Account: ' + JSON.stringify(this.newAccount, null, 2)); 
     }
 
-    handleClick(){
+    handleClickSave(){
         createAccount({acc:this.newAccount})
             .then(() => {
                 this.showToast('Congrats', 'Account created successfuly', 'info', 'sticky');
@@ -70,9 +86,26 @@ export default class AccountManagement extends LightningElement {
         this.dispatchEvent(event);
     }
 
-    handleToggle(){
-        this.showForm= !this.showForm;
+    handleToggle(event){
+        if (event.target.label=="Update Account" ) {
+            this.showUpdateForm= !this.showUpdateForm;
+        }else{
+
+        this.showCreateForm= !this.showCreateForm;}
     }
+    handleCheckboxChange(event){
+        const selectedId = event.target.value;
+        const selectedAccount = this.accounts.find(account => account.Id === selectedId);
+
+        if (event.target.checked) {
+            this.selectedAccounts = [...this.selectedAccounts, selectedAccount];
+        } else {
+            this.selectedAccounts = this.selectedAccounts.filter(account => account.Id !== selectedId);
+        }
+        console.log(JSON.stringify(this.selectedAccounts, null, 2));
+            
+    }
+    
 }
 
 

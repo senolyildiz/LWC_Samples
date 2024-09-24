@@ -29,4 +29,13 @@ public with sharing class AccountManagementController {
             throw new AuraHandledException(e.getMessage());
         }
     }
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccounts(){
+        try {
+            return [SELECT Id, Name, Type, Industry, Rating, AccountNumber FROM Account Limit 10];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+
+        }
+    }
 }
