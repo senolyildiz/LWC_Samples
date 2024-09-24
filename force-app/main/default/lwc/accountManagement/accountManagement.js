@@ -129,7 +129,7 @@ export default class AccountManagement extends LightningElement {
                     this.showToast('Success', 'Accounts updated successfully', 'success');
                     this.showUpdateForm = false;
                    // this.selectedAccountIds=[];
-                    return refreshApex(this.accountResults);
+                    return refreshApex(this.accountsResult);
                 })
                 .catch(error => {
                     this.showToast('Error', error.body.message, 'error');
