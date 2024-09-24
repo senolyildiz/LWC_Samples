@@ -38,4 +38,14 @@ public with sharing class AccountManagementController {
 
         }
     }
+    @AuraEnabled
+    public static void updateAccount(List<Account> updatedAccountList){
+        try {
+            update updatedAccountList;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+
+        } 
+    }
+
 }
