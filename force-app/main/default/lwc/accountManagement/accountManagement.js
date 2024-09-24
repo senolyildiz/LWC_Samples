@@ -1,22 +1,22 @@
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
 import getTypePicklistValues from '@salesforce/apex/AccountManagementController.getTypePicklistValues';
 import { getPicklistValuesByRecordType } from "lightning/uiObjectInfoApi";
 import ACCOUNT_OBJECT from "@salesforce/schema/Account";
 import createAccount from '@salesforce/apex/AccountManagementController.createAccount';
+import updateAccount from '@salesforce/apex/AccountManagementController.updateAccount';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getAccounts from '@salesforce/apex/AccountManagementController.getAccounts';
+import { refreshApex } from '@salesforce/apex';
 export default class AccountManagement extends LightningElement {
-    typeOptions = [];
-    industryOptions = [];
+    @track typeOptions = [];
+    @track industryOptions = [];
     showCreateForm= false;
     showUpdateForm= false;
-    accountsResult=[];
-    accounts=[];
-    selectedAccounts=[];
-
-
-
-    newAccount = {
+    @track accountsResult=[];
+    @track accounts=[];
+    @track selectedAccounts=[];
+    @track updatedFields={};
+    @track  newAccount = {
         Name: '',
         Industry: '',
         Phone: '',
@@ -61,8 +61,15 @@ export default class AccountManagement extends LightningElement {
     }
     handleInputs(event) {
        const field= event.target.name;
+       if(this.showCreateForm){
         this.newAccount[field]=event.target.value;
         console.log('New Account: ' + JSON.stringify(this.newAccount, null, 2)); 
+       }
+       else if(this.showUpdateForm){
+        this.updatedFields[field]=event.target.value;
+        console.log('updatedFields: ' + JSON.stringify(this.updatedFields, null, 2)); 
+       }
+        
     }
 
     handleClickSave(){
@@ -105,7 +112,33 @@ export default class AccountManagement extends LightningElement {
         console.log(JSON.stringify(this.selectedAccounts, null, 2));
             
     }
+    handleClickUpdate(){
+        if (this.selectedAccounts.length > 0 && Object.keys(this.updatedFields).length > 0) {
+            this.selectedAccounts = this.selectedAccounts.map(account => {
+                let updatedAccount = { ...account };
+                for (let field in this.updatedFields) {
+                    updatedAccount[field] = this.updatedFields[field];
+                    console.log('mergg:', JSON.stringify(updatedAccount, null, 2));
+                }
+                return updatedAccount;
+                
+            });
     
+        updateAccount({ updatedAccountList: this.selectedAccounts })
+                .then(() => {
+                    this.showToast('Success', 'Accounts updated successfully', 'success');
+                    this.showUpdateForm = false;
+                   // this.selectedAccountIds=[];
+                    return refreshApex(this.accountResults);
+                })
+                .catch(error => {
+                    this.showToast('Error', error.body.message, 'error');
+                });
+        
 }
+else {
+            this.showToast('Error', 'No accounts selected or no fields to update', 'error');
+        }
+    }
 
-
+}
