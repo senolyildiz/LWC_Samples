@@ -158,4 +158,20 @@ else {
         
     }
 
+
+    handleSave(event) {
+        const updatedFields = event.detail.draftValues;
+    
+        updateAccount({ updatedAccountList: updatedFields })
+            .then(() => {
+                this.showToast('Success', 'Accounts updated successfully', 'success');
+                // Clear draft values
+                this.draftValues = [];
+                return refreshApex(this.accountsResult);
+            })
+            .catch(error => {
+                this.showToast('Error', error.body.message, 'error');
+            });
+    }   
+
 }
