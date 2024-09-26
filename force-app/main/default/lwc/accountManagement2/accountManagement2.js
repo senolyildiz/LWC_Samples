@@ -20,8 +20,8 @@ export default class AccountManagement extends LightningElement {
         Type: ''
     };
     @track updatedFields = {};
-    @track selectedAction = 'create'; // Default to 'Create'
-    @track isCreate = true;
+    @track selectedAction = ''; // Default to 'Create'
+    @track isCreate = false;
     @track isUpdate = false;
     accountsResult;
 

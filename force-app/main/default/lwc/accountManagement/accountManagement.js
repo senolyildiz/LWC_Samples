@@ -7,7 +7,14 @@ import updateAccount from '@salesforce/apex/AccountManagementController.updateAc
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getAccounts from '@salesforce/apex/AccountManagementController.getAccounts';
 import { refreshApex } from '@salesforce/apex';
+
 export default class AccountManagement extends LightningElement {
+    columns = [
+        { label: 'Account Name', fieldName: 'Name', editable: true},
+        { label: 'Phone', fieldName: 'Phone', type: 'phone', editable: true },
+        { label: 'Account Type', fieldName: 'Type', type: 'Picklist' , editable: true},
+        { label: 'Account Industry', fieldName: 'Industry', type: 'Picklist', editable: true },
+    ];
     @track typeOptions = [];
     @track industryOptions = [];
     showCreateForm= false;
@@ -22,6 +29,7 @@ export default class AccountManagement extends LightningElement {
         Phone: '',
         Type: ''
     };
+    selectedAccountIds;
 
     
        
@@ -127,8 +135,8 @@ export default class AccountManagement extends LightningElement {
         updateAccount({ updatedAccountList: this.selectedAccounts })
                 .then(() => {
                     this.showToast('Success', 'Accounts updated successfully', 'success');
-                    this.showUpdateForm = false;
-                   // this.selectedAccountIds=[];
+                    //this.showUpdateForm = false;
+                      this.selectedAccountIds=[];
                     return refreshApex(this.accountsResult);
                 })
                 .catch(error => {
@@ -139,6 +147,15 @@ export default class AccountManagement extends LightningElement {
 else {
             this.showToast('Error', 'No accounts selected or no fields to update', 'error');
         }
+    }
+    handleRowSelection (event){
+        //Get the selected rows (accounts)
+        const selectedRows = event.detail.selectedRows;
+
+        // Update the selectedAccounts variable
+        this.selectedAccounts = [...selectedRows];
+        console.log('datatable:', JSON.stringify(this.selectedAccounts, null, 2));
+        
     }
 
 }

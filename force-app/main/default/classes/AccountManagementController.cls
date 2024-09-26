@@ -32,7 +32,7 @@ public with sharing class AccountManagementController {
     @AuraEnabled(cacheable=true)
     public static List<Account> getAccounts(){
         try {
-            return [SELECT Id, Name, Type, Industry, Rating, AccountNumber FROM Account Limit 10];
+            return [SELECT Id, Name, Type, Industry, Phone, AccountNumber FROM Account Limit 10];
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
 
