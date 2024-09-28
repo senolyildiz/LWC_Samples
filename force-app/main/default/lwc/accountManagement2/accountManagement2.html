@@ -91,6 +91,19 @@
                                   class="slds-m-left_x-small"></lightning-button>
             </div>
         </template>
+        
+        <lightning-datatable
+                key-field="Id"
+                data={accounts}
+                columns={columns}
+                show-row-number-column
+                onrowselection={handleRowSelection}
+                selected-rows={selectedAccountIds}
+                onsave={handleSave}
+                draft-values={draftValues}
+               	>
+                
+        </lightning-datatable>
 
     </lightning-card>
 </template>
