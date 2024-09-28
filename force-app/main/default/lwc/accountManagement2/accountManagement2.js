@@ -9,6 +9,14 @@ import getAccounts from '@salesforce/apex/AccountManagementController.getAccount
 import { refreshApex } from '@salesforce/apex';
 
 export default class AccountManagement extends LightningElement {
+    columns = [
+        { label: 'Account Name', fieldName: 'Name', editable: true },
+        { label: 'Phone', fieldName: 'Phone', type: 'phone', editable: true },
+        { label: 'Account Type', fieldName: 'Type', editable: true },
+        { label: 'Industry', fieldName: 'Industry', editable: true }
+    ];
+
+    @track draftValues = [];
     @track typeOptions = [];
     @track industryOptions = [];
     @track accounts = [];
@@ -23,11 +31,20 @@ export default class AccountManagement extends LightningElement {
     @track selectedAction = ''; // Default to 'Create'
     @track isCreate = false;
     @track isUpdate = false;
+    @track recordTypeId = ''; // Store the selected Record Type ID
+
+    doctorRecordTypeId = '012WU0000022f17YAA';  // Doctor Record Type ID
+    patientRecordTypeId = '012WU0000022eEjYAI';  // Patient Record Type ID
     accountsResult;
 
     actionOptions = [
         { label: 'Create an Account', value: 'create' },
         { label: 'Update Account', value: 'update' }
+    ];
+
+    recordTypeOptions = [
+        { label: 'Patient', value: 'Patient' },
+        { label: 'Doctor', value: 'Doctor' }
     ];
 
     // Fetch accounts via @wire
@@ -42,10 +59,7 @@ export default class AccountManagement extends LightningElement {
     }
 
     // Fetch picklist values for Industry and Type
-    @wire(getPicklistValuesByRecordType, {
-        objectApiName: ACCOUNT_OBJECT,
-        recordTypeId: "012000000000000AAA" // Replace with correct Record Type Id
-    })
+    @wire(getPicklistValuesByRecordType, { objectApiName: ACCOUNT_OBJECT, recordTypeId: '$recordTypeId' })
     wiredPicklistValues({ error, data }) {
         if (data) {
             this.industryOptions = data.picklistFieldValues.Industry.values;
@@ -55,7 +69,17 @@ export default class AccountManagement extends LightningElement {
         }
     }
 
-    // Handle radio button change
+    // Handle radio button change for Record Type selection
+    handleRecordTypeChange(event) {
+        const selectedRecordType = event.detail.value;
+        if (selectedRecordType === 'Doctor') {
+            this.recordTypeId = this.doctorRecordTypeId;
+        } else if (selectedRecordType === 'Patient') {
+            this.recordTypeId = this.patientRecordTypeId;
+        }
+    }
+
+    // Handle action (Create or Update)
     handleActionChange(event) {
         this.selectedAction = event.detail.value;
         this.isCreate = this.selectedAction === 'create';
@@ -74,7 +98,17 @@ export default class AccountManagement extends LightningElement {
 
     // Handle creating a new account
     handleClickSave() {
-        createAccount({ acc: this.newAccount })
+        if (!this.recordTypeId) {
+            this.showToast('Error', 'Please select a Record Type', 'error');
+            return;
+        }
+    
+        // Include RecordTypeId in the new account data
+        const accountData = { ...this.newAccount, RecordTypeId: this.recordTypeId };
+        
+        console.log('Account Data being passed:', JSON.stringify(accountData)); // Debugging step
+        
+        createAccount({ acc: accountData })
             .then(() => {
                 this.showToast('Success', 'Account created successfully', 'success');
                 this.isCreate = false; // Hide the form after saving
@@ -84,26 +118,15 @@ export default class AccountManagement extends LightningElement {
                 this.showToast('Error', error.body.message, 'error');
             });
     }
-
-    // Handle checkbox change to select/deselect accounts
-    handleCheckboxChange(event) {
-        const selectedId = event.target.value;
-        const selectedAccount = this.accounts.find(account => account.Id === selectedId);
-
-        if (event.target.checked) {
-            this.selectedAccounts = [...this.selectedAccounts, selectedAccount];
-        } else {
-            this.selectedAccounts = this.selectedAccounts.filter(account => account.Id !== selectedId);
-        }
-    }
+    
 
     // Handle updating selected accounts
     handleClickUpdate() {
         if (this.selectedAccounts.length > 0 && Object.keys(this.updatedFields).length > 0) {
             const updatedAccountList = this.selectedAccounts.map(account => {
-                let updatedAccount = { ...account }; // Copy the original account
+                let updatedAccount = { ...account };
                 for (let field in this.updatedFields) {
-                    updatedAccount[field] = this.updatedFields[field]; // Apply the updates
+                    updatedAccount[field] = this.updatedFields[field];
                 }
                 return updatedAccount;
             });
@@ -111,8 +134,8 @@ export default class AccountManagement extends LightningElement {
             updateAccount({ updatedAccountList })
                 .then(() => {
                     this.showToast('Success', 'Accounts updated successfully', 'success');
-                    this.isUpdate = false; // Hide the form after updating
-                    return refreshApex(this.accountsResult); // Refresh the account list
+                    this.isUpdate = false;
+                    return refreshApex(this.accountsResult); // Refresh the datatable
                 })
                 .catch(error => {
                     this.showToast('Error', error.body.message, 'error');
@@ -122,12 +145,19 @@ export default class AccountManagement extends LightningElement {
         }
     }
 
+    // Handle row selection for datatable
+    handleRowSelection(event) {
+        const selectedRows = event.detail.selectedRows;
+        this.selectedAccounts = [...selectedRows];
+    }
+
     // Show toast notifications
-    showToast(title, message, variant) {
+    showToast(title, message, variant, mode = 'dismissable') {
         const event = new ShowToastEvent({
             title,
             message,
             variant,
+            mode
         });
         this.dispatchEvent(event);
     }

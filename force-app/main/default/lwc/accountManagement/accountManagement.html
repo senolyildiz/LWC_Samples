@@ -102,73 +102,7 @@
 
         <lightning-datatable
                 key-field="Id"
-                data={accounts}import { LightningElement, track } from 'lwc';
-import getAccounts from '@salesforce/apex/AccountManagementController.getAccounts';
-import createAccount from '@salesforce/apex/AccountManagementController.createAccount';
-import updateAccount from '@salesforce/apex/AccountManagementController.updateAccount';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { refreshApex } from '@salesforce/apex';
-
-export default class AccountManagement extends LightningElement {
-    @track accounts = []; // Accounts data to display in datatable
-    @track typeOptions = [];
-    @track industryOptions = [];
-    @track selectedAccounts = [];
-    @track newAccount = {
-        Name: '',
-        Industry: '',
-        Phone: '',
-        Type: ''
-    };
-    @track updatedFields = {};
-    @track hasAccounts = false;  // New flag to control when the datatable is visible
-    @track draftValues = [];
-
-    // Define the columns for the datatable
-    columns = [
-        { label: 'Account Name', fieldName: 'Name', editable: true },
-        { label: 'Phone', fieldName: 'Phone', type: 'phone', editable: true },
-        { label: 'Account Type', fieldName: 'Type', type: 'text', editable: true },
-        { label: 'Industry', fieldName: 'Industry', type: 'text', editable: true }
-    ];
-
-    // Method to fetch accounts when triggered (e.g., by a button click)
-    handleFetchAccounts() {
-        getAccounts()
-            .then(result => {
-                this.accounts = result;
-                this.hasAccounts = this.accounts.length > 0; // Show datatable if there are accounts
-            })
-            .catch(error => {
-                this.showToast('Error', error.body.message, 'error');
-            });
-    }
-
-    // Method to save edited account rows in the datatable
-    handleSave(event) {
-        const updatedFields = event.detail.draftValues; // Capture the updated fields from the draft
-        updateAccount({ updatedAccountList: updatedFields })
-            .then(() => {
-                this.showToast('Success', 'Accounts updated successfully', 'success');
-                this.draftValues = []; // Clear draft values after save
-                return refreshApex(this.accountsResult); // Refresh the account list to reflect changes
-            })
-            .catch(error => {
-                this.showToast('Error', error.body.message, 'error');
-            });
-    }
-
-    // Utility method to show toast notifications
-    showToast(title, message, variant) {
-        const event = new ShowToastEvent({
-            title,
-            message,
-            variant
-        });
-        this.dispatchEvent(event);
-    }
-}
-
+                data={accounts}
                 columns={columns}
                 show-row-number-column
                 onrowselection={handleRowSelection}

@@ -14,6 +14,13 @@
 
         <!-- Create Account Form -->
         <template lwc:if={isCreate}>
+            <lightning-radio-group
+                    name="recordTypeSelection"
+                    label="Select Record Type"
+                    options={recordTypeOptions}
+                    value={selectedRecordType}
+                    onchange={handleRecordTypeChange}>
+                </lightning-radio-group>
             <div class="slds-p-around_medium">
                 <lightning-input type="text" name="Name" value={newAccount.Name}
                                  label="Enter Name" onchange={handleInputs} required
@@ -49,27 +56,31 @@
 
         <!-- Update Account Form -->
         <template lwc:if={isUpdate}>
-            <ul>
-                <template for:each={accounts} for:item="account">
-                    <li key={account.Id}>
-                        <lightning-input type="checkbox" label={account.Name}
-                                         value={account.Id} onchange={handleCheckboxChange}>
-                        </lightning-input>
-                    </li>
-                </template>
-            </ul>
-
+            <!-- Datatable to Select Account for Update -->
             <div class="slds-p-around_medium">
-                <lightning-input type="text" name="Name" value={newAccount.Name}
+                <lightning-datatable
+                    key-field="Id"
+                    data={accounts}
+                    columns={columns}
+                    show-row-number-column
+                    onrowselection={handleRowSelection}
+                    selected-rows={selectedAccountIds}
+                    draft-values={draftValues}>
+                </lightning-datatable>
+            </div>
+
+            <!-- Input Fields for Updating Selected Account -->
+            <div class="slds-p-around_medium">
+                <lightning-input type="text" name="Name" value={updatedFields.Name}
                                  label="Enter Name" onchange={handleInputs} required
                                  placeholder="Enter Full Name"></lightning-input>
-                <lightning-input name="Phone" value={newAccount.Phone}
+                <lightning-input name="Phone" value={updatedFields.Phone}
                                  label="Enter Phone" onchange={handleInputs} required></lightning-input>
 
                 <lightning-combobox
                     name="Type"
                     label="Type"
-                    value={newAccount.Type}
+                    value={updatedFields.Type}
                     placeholder="Select Type"
                     options={typeOptions}
                     onchange={handleInputs}>
@@ -78,7 +89,7 @@
                 <lightning-combobox
                     name="Industry"
                     label="Industry"
-                    value={newAccount.Industry}
+                    value={updatedFields.Industry}
                     placeholder="Select Industry"
                     options={industryOptions}
                     onchange={handleInputs}>
@@ -91,19 +102,5 @@
                                   class="slds-m-left_x-small"></lightning-button>
             </div>
         </template>
-        
-        <lightning-datatable
-                key-field="Id"
-                data={accounts}
-                columns={columns}
-                show-row-number-column
-                onrowselection={handleRowSelection}
-                selected-rows={selectedAccountIds}
-                onsave={handleSave}
-                draft-values={draftValues}
-               	>
-                
-        </lightning-datatable>
-
     </lightning-card>
 </template>
