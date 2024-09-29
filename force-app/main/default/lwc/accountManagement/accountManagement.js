@@ -161,6 +161,10 @@ else {
 
     handleSave(event) {
         const updatedFields = event.detail.draftValues;
+        if (!updatedFields || updatedFields.length === 0) {
+            this.showToast('Error', 'No changes detected', 'error');
+            return;
+        }
     
         updateAccount({ updatedAccountList: updatedFields })
             .then(() => {

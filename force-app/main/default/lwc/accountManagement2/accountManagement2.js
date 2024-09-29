@@ -8,10 +8,11 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getAccounts from '@salesforce/apex/AccountManagementController.getAccounts';
 import { refreshApex } from '@salesforce/apex';
 
+
 export default class AccountManagement extends LightningElement {
     columns = [
         { label: 'Account Name', fieldName: 'Name', editable: true },
-        { label: 'Phone', fieldName: 'Phone', type: 'phone', editable: true },
+        { label: 'Phone', fieldName: 'Phone', type: 'Phone', editable: true },
         { label: 'Account Type', fieldName: 'Type', editable: true },
         { label: 'Industry', fieldName: 'Industry', editable: true }
     ];
@@ -25,7 +26,8 @@ export default class AccountManagement extends LightningElement {
         Name: '',
         Industry: '',
         Phone: '',
-        Type: ''
+        Type: '',
+        RecordTypeId: ''
     };
     @track updatedFields = {};
     @track selectedAction = ''; // Default to 'Create'
@@ -33,9 +35,9 @@ export default class AccountManagement extends LightningElement {
     @track isUpdate = false;
     @track recordTypeId = ''; // Store the selected Record Type ID
 
-    doctorRecordTypeId = '012WU0000022f17YAA';  // Doctor Record Type ID
-    patientRecordTypeId = '012WU0000022eEjYAI';  // Patient Record Type ID
-    accountsResult;
+    @track doctorRecordTypeId = '012WU0000022f17YAA';  // Doctor Record Type ID
+    @track patientRecordTypeId = '012WU0000022eEjYAI';  // Patient Record Type ID
+    @track accountsResult;
 
     actionOptions = [
         { label: 'Create an Account', value: 'create' },
@@ -71,14 +73,14 @@ export default class AccountManagement extends LightningElement {
 
     // Handle radio button change for Record Type selection
     handleRecordTypeChange(event) {
-        const selectedRecordType = event.detail.value;
+         const selectedRecordType = event.detail.value;
         if (selectedRecordType === 'Doctor') {
             this.recordTypeId = this.doctorRecordTypeId;
         } else if (selectedRecordType === 'Patient') {
             this.recordTypeId = this.patientRecordTypeId;
         }
     }
-
+    
     // Handle action (Create or Update)
     handleActionChange(event) {
         this.selectedAction = event.detail.value;
@@ -160,5 +162,18 @@ export default class AccountManagement extends LightningElement {
             mode
         });
         this.dispatchEvent(event);
+    }
+    handleSave(event) {
+        const updatedFields = event.detail.draftValues; // Draft changes from the datatable
+
+        updateAccount({ updatedAccountList: updatedFields })
+            .then(() => {
+                this.showToast('Success', 'Accounts updated successfully', 'success');
+                this.draftValues = []; // Clear the draft values after successful update
+                return refreshApex(this.accountsResult); // Refresh the account list
+            })
+            .catch(error => {
+                this.showToast('Error', error.body.message, 'error');
+            });
     }
 }
