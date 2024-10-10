@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Current Weather"  icon-name="action:new_account">
+
+        
+            <div class="slds-p-around_medium">
+                <lightning-input type="text" label=" Enter City Name" value={cityName} onchange={handleChange}>
+                    
+                </lightning-input>
+            </div>
+            <div class="slds-text-align_right">
+                <lightning-button  label="Show Weather"
+                                  title="Show Weather" onclick={handleClickSave}
+                                  class="slds-m-left_x-small"></lightning-button>
+            </div>
+    </lightning-card>
+    
+</template>

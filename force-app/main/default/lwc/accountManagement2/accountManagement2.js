@@ -23,7 +23,7 @@ export default class AccountManagement extends LightningElement {
     @track accounts = [];
     @track selectedAccounts = [];
     @track newAccount = {
-        Name: '',
+        LastName: '',
         Industry: '',
         Phone: '',
         Type: '',

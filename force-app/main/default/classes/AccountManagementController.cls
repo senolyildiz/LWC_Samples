@@ -23,7 +23,7 @@ public with sharing class AccountManagementController {
     @AuraEnabled
     public static void createAccount(Account acc){
         try {
-            system.debug(acc);
+            system.debug('accounts: '+acc);
             insert acc;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
