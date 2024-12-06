@@ -1,0 +1,46 @@
+<template>
+   
+    
+
+    <lightning-card title="Account Manager"  icon-name="action:new_account">
+
+        <div class="slds-text-align_left">
+            <lightning-button variant="success" label="Create an Account" 
+            title="Create an Account" onclick={handleToggle} 
+            class="slds-m-left_x-small"
+            ></lightning-button>
+        </div>
+
+        <template lwc:if={showForm}>
+        <lightning-record-form
+            object-api-name="Account"
+            columns="3"
+            fields={fields}
+            onsuccess={handleSuccess}
+            record-id={recordId}
+            mode="view"
+           >
+        </lightning-record-form>
+    
+        </template>
+   
+        <lightning-record-edit-form object-api-name="Account" onsuccess={handleSuccess} record-id={recordId}>
+            <lightning-messages> </lightning-messages>
+            
+            <lightning-input-field field-name="Name"> </lightning-input-field>
+            <lightning-input-field field-name="Phone"> </lightning-input-field>
+            <lightning-input-field field-name="Industry"> </lightning-input-field>
+            <lightning-input-field field-name="Type"></lightning-input-field>
+            <lightning-button
+                class="slds-m-top_small"
+                type="submit"
+                label="Create new"
+            >
+            </lightning-button>
+        </lightning-record-edit-form>
+   
+   
+  
+
+</lightning-card>
+</template>

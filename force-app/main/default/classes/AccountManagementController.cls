@@ -23,10 +23,29 @@ public with sharing class AccountManagementController {
     @AuraEnabled
     public static void createAccount(Account acc){
         try {
-            system.debug(acc);
+            system.debug('accounts: '+acc);
             insert acc;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccounts(){
+        try {
+            return [SELECT Id, Name, Type, Industry, Phone, AccountNumber,RecordTypeId  FROM Account Limit 10];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+
+        }
+    }
+    @AuraEnabled
+    public static void updateAccount(List<Account> updatedAccountList){
+        try {
+            update updatedAccountList;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+
+        } 
+    }
+
 }

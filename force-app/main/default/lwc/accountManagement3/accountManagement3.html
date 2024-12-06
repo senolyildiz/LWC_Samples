@@ -1,0 +1,106 @@
+<template>
+    <lightning-card title="Account Manager" icon-name="action:new_account">
+        
+        <!-- Radio Group to Choose Between Create an Account and Update Account -->
+        <div class="slds-p-around_medium">
+            <lightning-radio-group
+                name="actionSelection"
+                label="Select Action"
+                options={actionOptions}
+                value={selectedAction}
+                onchange={handleActionChange}>
+            </lightning-radio-group>
+        </div>
+
+        <!-- Create Account Form -->
+        <template lwc:if={isCreate}>
+            <lightning-radio-group
+                    name="recordTypeSelection"
+                    label="Select Record Type"
+                    options={recordTypeOptions}
+                    value={selectedRecordType}
+                    onchange={handleRecordTypeChange}>
+                </lightning-radio-group>
+            <div class="slds-p-around_medium">
+                <lightning-input type="text" name="Name" value={newAccount.Name}
+                                 label="Enter Name" onchange={handleInputs} required
+                                 placeholder="Enter Full Name"></lightning-input>
+                <lightning-input name="Phone" value={newAccount.Phone}
+                                 label="Enter Phone" onchange={handleInputs} required></lightning-input>
+                
+                <lightning-combobox
+                    name="Type"
+                    label="Type"
+                    value={newAccount.Type}
+                    placeholder="Select Type"
+                    options={typeOptions}
+                    onchange={handleInputs}>
+                </lightning-combobox>
+
+                <lightning-combobox
+                    name="Industry"
+                    label="Industry"
+                    value={newAccount.Industry}
+                    placeholder="Select Industry"
+                    options={industryOptions}
+                    onchange={handleInputs}>
+                </lightning-combobox>
+            </div>
+
+            <div class="slds-text-align_right">
+                <lightning-button variant="success" label="Save An Account"
+                                  title="Successful action" onclick={handleClickSave}
+                                  class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </template>
+
+        <!-- Update Account Form -->
+        <template lwc:if={isUpdate}>
+            <!-- Datatable to Select Account for Update -->
+            <div class="slds-p-around_medium">
+                <lightning-datatable
+                    key-field="Id"
+                    data={accounts}
+                    columns={columns}
+                    show-row-number-column
+                    onrowselection={handleRowSelection}
+                    selected-rows={selectedAccountIds}
+                    draft-values={draftValues}>
+                </lightning-datatable>
+            </div>
+
+            <!-- Input Fields for Updating Selected Account -->
+            <div class="slds-p-around_medium">
+                <lightning-input type="text" name="Name" value={updatedFields.Name}
+                                 label="Enter Name" onchange={handleInputs} required
+                                 placeholder="Enter Full Name"></lightning-input>
+                <lightning-input name="Phone" value={updatedFields.Phone}
+                                 label="Enter Phone" onchange={handleInputs} required></lightning-input>
+
+                <lightning-combobox
+                    name="Type"
+                    label="Type"
+                    value={updatedFields.Type}
+                    placeholder="Select Type"
+                    options={typeOptions}
+                    onchange={handleInputs}>
+                </lightning-combobox>
+
+                <lightning-combobox
+                    name="Industry"
+                    label="Industry"
+                    value={updatedFields.Industry}
+                    placeholder="Select Industry"
+                    options={industryOptions}
+                    onchange={handleInputs}>
+                </lightning-combobox>
+            </div>
+
+            <div class="slds-text-align_right">
+                <lightning-button variant="success" label="Update An Account"
+                                  title="Successful action" onclick={handleClickUpdate}
+                                  class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </template>
+    </lightning-card>
+</template>

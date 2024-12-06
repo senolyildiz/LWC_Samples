@@ -1,0 +1,33 @@
+<template>
+    <lightning-card title="Patient Account Management"  icon-name="action:new_account">
+
+        <div class="slds-text-align_left">
+            <lightning-button variant="success" label="Create an Patient Account" 
+            title="Create an Patient Account" onclick={handleToggle} 
+            class="slds-m-left_x-small"
+            ></lightning-button>
+        </div>
+
+        <template lwc:if={showForm}>
+        <lightning-record-form
+            object-api-name="Account"
+            record-type-id="012WU0000022eEjYAI"
+            columns="2"
+            layout-type="Full"
+            onsuccess={handleSuccess}
+            mode="view"
+            record-id={recordId}
+    
+    
+           >
+        </lightning-record-form>
+    
+    </template> 
+   
+        
+   
+   
+  
+
+</lightning-card>
+</template>
